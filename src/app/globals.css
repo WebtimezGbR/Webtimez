@@ -123,20 +123,21 @@
   }
   html {
     @apply font-sans;
-    /* Komplett transparent → iOS Safari sampelt für den Bar-Backdrop direkt
-       das was hinter dem html-Element rendert. Da der Shader fixed inset-0
-       direkt im Body sitzt, scheint er durch die translucente Bar durch. */
-    background-color: transparent;
     -webkit-tap-highlight-color: transparent;
     min-height: 100dvh;
-    /* Schwarzer Notfall-Background ÜBER html, falls Shader noch nicht geladen ist. */
-    background-image: linear-gradient(#000, #000);
+    /* WICHTIG: WebGL-Canvas-Pixel kann iOS Safari NICHT für den translucent
+       Bar-Backdrop samplen. Stattdessen samplet Safari diesen CSS-Gradient.
+       Farben matchen den Hero-Shader (Indigo → Pink → Schwarz). Dadurch
+       bekommt die URL-Bar die Pink/Lila-Tönung statt Default-Grau. */
+    background:
+      radial-gradient(ellipse at 30% 20%, #2a0f4a 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, #4a0e36 0%, transparent 60%),
+      #0a0612;
   }
   body {
     @apply text-foreground;
     background-color: transparent;
     min-height: 100dvh;
-    /* Inhalt darf hinter Safe-Areas (Notch / Home-Bar) laufen. */
     padding: 0;
     margin: 0;
   }
