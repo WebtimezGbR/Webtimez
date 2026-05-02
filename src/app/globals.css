@@ -142,6 +142,17 @@
     margin: 0;
   }
 
+  /* Hero läuft bis an die echten Viewport-Ränder, auch hinter Safe-Area
+     (Statusbar oben, Bottom-Bar/Home-Indicator unten). Der Gradient bleibt
+     edge-to-edge — Browser-UI wird translucent darübergelegt. */
+  #home {
+    min-height: 100dvh;
+    margin-top: calc(env(safe-area-inset-top) * -1);
+    margin-bottom: calc(env(safe-area-inset-bottom) * -1);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
   /* Autofill: Browser-Default (weißer/gelber Block) überschreiben */
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
