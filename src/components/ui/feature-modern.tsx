@@ -10,9 +10,25 @@ import {
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
+  HelpCircle,
 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Balancer from "react-wrap-balancer";
+import { supabase } from "@/lib/supabase/client";
+
+// Icon-Lookup: DB speichert nur den Namen als Text, hier mappen wir auf Components.
+const ICONS: Record<string, React.ElementType> = {
+  Code,
+  Palette,
+  BarChart3,
+  Server,
+  ShieldCheck,
+};
+
+function resolveIcon(name: string | null | undefined): React.ElementType {
+  if (!name) return HelpCircle;
+  return ICONS[name] ?? HelpCircle;
+}
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const headingShadow =
@@ -193,58 +209,53 @@ function GraphicKontrolle() {
   );
 }
 
-const services: Service[] = [
-  {
-    number: "01",
-    title: "Entwicklung",
-    description:
-      "Moderne Webentwicklung mit den neuesten Technologien – schnell, skalierbar und zukunftssicher.",
-    icon: Code,
-    accent:
-      "linear-gradient(135deg, rgba(255,92,224,0.22) 0%, rgba(123,58,237,0.18) 60%, rgba(15,12,41,0) 100%)",
-    graphic: <GraphicEntwicklung />,
-  },
-  {
-    number: "02",
-    title: "Design",
-    description:
-      "Individuelles Webdesign, das eure Marke perfekt widerspiegelt und eure Zielgruppe begeistert.",
-    icon: Palette,
-    accent:
-      "linear-gradient(135deg, rgba(56,189,248,0.18) 0%, rgba(255,92,224,0.18) 60%, rgba(15,12,41,0) 100%)",
-    graphic: <GraphicDesign />,
-  },
-  {
-    number: "03",
-    title: "Optimierung",
-    description:
-      "Performance, SEO und Conversion-Optimierung – damit eure Website nicht nur gut aussieht, sondern auch liefert.",
-    icon: BarChart3,
-    accent:
-      "linear-gradient(135deg, rgba(168,85,247,0.18) 0%, rgba(255,92,224,0.18) 60%, rgba(15,12,41,0) 100%)",
-    graphic: <GraphicOptimierung />,
-  },
-  {
-    number: "04",
-    title: "Hosting",
-    description:
-      "Sicheres, schnelles Hosting inklusive Domain-Setup, SSL und automatischen Backups – wir kümmern uns um den Server.",
-    icon: Server,
-    accent:
-      "linear-gradient(135deg, rgba(45,212,191,0.18) 0%, rgba(255,92,224,0.18) 60%, rgba(15,12,41,0) 100%)",
-    graphic: <GraphicHosting />,
-  },
-  {
-    number: "05",
-    title: "Kontrolle",
-    description:
-      "Laufende Wartung, Monitoring und Updates – wir sorgen dafür, dass alles reibungslos läuft.",
-    icon: ShieldCheck,
-    accent:
-      "linear-gradient(135deg, rgba(255,92,224,0.22) 0%, rgba(99,102,241,0.18) 60%, rgba(15,12,41,0) 100%)",
-    graphic: <GraphicKontrolle />,
-  },
-];
+// Graphic-Lookup: DB speichert nur einen String wie "entwicklung", hier mappen wir auf die SVG-Komponente.
+const GRAPHICS: Record<string, () => React.ReactElement> = {
+  entwicklung: GraphicEntwicklung,
+  design: GraphicDesign,
+  optimierung: GraphicOptimierung,
+  hosting: GraphicHosting,
+  kontrolle: GraphicKontrolle,
+};
+
+// Akzent-Verlauf passend zum Grafik-Typ (sieht harmonisch aus mit der jeweiligen SVG).
+const ACCENTS: Record<string, string> = {
+  entwicklung:
+    "linear-gradient(135deg, rgba(255,92,224,0.22) 0%, rgba(123,58,237,0.18) 60%, rgba(15,12,41,0) 100%)",
+  design:
+    "linear-gradient(135deg, rgba(56,189,248,0.18) 0%, rgba(255,92,224,0.18) 60%, rgba(15,12,41,0) 100%)",
+  optimierung:
+    "linear-gradient(135deg, rgba(168,85,247,0.18) 0%, rgba(255,92,224,0.18) 60%, rgba(15,12,41,0) 100%)",
+  hosting:
+    "linear-gradient(135deg, rgba(45,212,191,0.18) 0%, rgba(255,92,224,0.18) 60%, rgba(15,12,41,0) 100%)",
+  kontrolle:
+    "linear-gradient(135deg, rgba(255,92,224,0.22) 0%, rgba(99,102,241,0.18) 60%, rgba(15,12,41,0) 100%)",
+};
+
+const FALLBACK_ACCENT =
+  "linear-gradient(135deg, rgba(255,92,224,0.18) 0%, rgba(123,58,237,0.14) 60%, rgba(15,12,41,0) 100%)";
+
+interface ServiceRow {
+  id: number;
+  position: number;
+  number: string;
+  title: string;
+  description: string;
+  icon_name: string;
+  graphic_type: string;
+}
+
+function rowToService(row: ServiceRow): Service {
+  const GraphicComponent = GRAPHICS[row.graphic_type] ?? GraphicEntwicklung;
+  return {
+    number: row.number,
+    title: row.title,
+    description: row.description,
+    icon: resolveIcon(row.icon_name),
+    accent: ACCENTS[row.graphic_type] ?? FALLBACK_ACCENT,
+    graphic: <GraphicComponent />,
+  };
+}
 
 interface CardProps {
   service: Service;
@@ -317,6 +328,28 @@ export default function Feature() {
   const ref = React.useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.15 });
 
+  const [services, setServices] = React.useState<Service[] | null>(null);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    supabase
+      .from("services")
+      .select("*")
+      .order("position", { ascending: true })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          console.error("Leistungen konnten nicht geladen werden:", error);
+          setServices([]);
+          return;
+        }
+        setServices((data as ServiceRow[]).map(rowToService));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     loop: true,
@@ -342,6 +375,13 @@ export default function Feature() {
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi, onSelect]);
+
+  // Wenn die Services geladen sind, muss Embla die neuen Slides erkennen.
+  React.useEffect(() => {
+    if (!emblaApi || !services) return;
+    emblaApi.reInit();
+    setSnapCount(emblaApi.scrollSnapList().length);
+  }, [emblaApi, services]);
 
   const scrollPrev = React.useCallback(
     () => emblaApi?.scrollPrev(),
@@ -392,20 +432,39 @@ export default function Feature() {
             aria-label="Unsere Leistungen"
           >
             <div className="flex -ml-4 sm:-ml-5 md:-ml-6">
-              {services.map((service, index) => (
-                <div
-                  key={service.number}
-                  role="group"
-                  aria-roledescription="slide"
-                  className="min-w-0 shrink-0 grow-0 basis-full pl-4 sm:pl-5 md:pl-6 md:basis-1/2 lg:basis-1/3"
-                >
-                  <ServiceCard
-                    service={service}
-                    index={index}
-                    inView={isInView}
-                  />
-                </div>
-              ))}
+              {services === null
+                ? Array.from({ length: 3 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="min-w-0 shrink-0 grow-0 basis-full pl-4 sm:pl-5 md:pl-6 md:basis-1/2 lg:basis-1/3"
+                    >
+                      <div className="h-[440px] sm:h-[460px] rounded-3xl border border-white/10 bg-black/30 backdrop-blur-md p-7 sm:p-8 flex flex-col justify-between">
+                        <div className="flex items-start justify-between">
+                          <div className="h-4 w-12 rounded bg-white/10 animate-pulse" />
+                          <div className="h-12 w-12 rounded-xl bg-white/10 animate-pulse" />
+                        </div>
+                        <div className="space-y-3">
+                          <div className="h-7 w-2/3 rounded bg-white/10 animate-pulse" />
+                          <div className="h-4 w-full rounded bg-white/5 animate-pulse" />
+                          <div className="h-4 w-5/6 rounded bg-white/5 animate-pulse" />
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                : services.map((service, index) => (
+                    <div
+                      key={service.number}
+                      role="group"
+                      aria-roledescription="slide"
+                      className="min-w-0 shrink-0 grow-0 basis-full pl-4 sm:pl-5 md:pl-6 md:basis-1/2 lg:basis-1/3"
+                    >
+                      <ServiceCard
+                        service={service}
+                        index={index}
+                        inView={isInView}
+                      />
+                    </div>
+                  ))}
             </div>
           </div>
 

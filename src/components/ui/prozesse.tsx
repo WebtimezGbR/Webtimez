@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import {
   MessageSquare,
@@ -9,7 +9,25 @@ import {
   Rocket,
   Sparkles,
   Flag,
+  HelpCircle,
 } from "lucide-react";
+import { supabase } from "@/lib/supabase/client";
+
+// Icon-Mapping: DB speichert Icon-Namen als Text, hier wandeln wir sie zurück in Components.
+// Wenn ein neuer Icon-Name dazukommen soll, einfach hier ergänzen.
+const ICONS: Record<string, React.ElementType> = {
+  MessageSquare,
+  PenTool,
+  Code2,
+  Rocket,
+  Sparkles,
+  Flag,
+};
+
+function resolveIcon(name: string | null | undefined): React.ElementType {
+  if (!name) return HelpCircle;
+  return ICONS[name] ?? HelpCircle;
+}
 
 const cn = (...args: Array<string | false | null | undefined>) =>
   args.filter(Boolean).join(" ");
@@ -29,67 +47,32 @@ interface Step {
   badge?: { label: string; icon: React.ElementType };
 }
 
-const steps: Step[] = [
-  {
-    id: "beratung",
-    number: "01",
-    icon: MessageSquare,
-    heading: "Kostenlose Erstberatung",
-    description:
-      "Wir lernen euch und euer Projekt kennen. Gemeinsam definieren wir Ziele, Zielgruppe und den Umfang eurer Website.",
-    details: [
-      "Analyse eurer Anforderungen",
-      "Zielgruppen-Definition",
-      "Projektumfang & Zeitplan",
-      "Transparentes Angebot",
-    ],
-    badge: { label: "Start", icon: Sparkles },
-  },
-  {
-    id: "design",
-    number: "02",
-    icon: PenTool,
-    heading: "Individuelles Design",
-    description:
-      "Basierend auf eurer Markenidentität gestalten wir ein einzigartiges Design, das eure Vision zum Leben erweckt.",
-    details: [
-      "Erste Skizzen & Vorschauen",
-      "Design passend zu eurer Marke",
-      "Sieht auf Handy & PC gut aus",
-      "Ihr gebt Feedback, wir passen an",
-    ],
-  },
-  {
-    id: "entwicklung",
-    number: "03",
-    icon: Code2,
-    heading: "Technische Umsetzung",
-    description:
-      "Wir setzen euer Design mit modernsten Technologien um – performant, sicher und skalierbar.",
-    details: [
-      "Programmierung mit modernen Tools",
-      "Wird bei Google gefunden",
-      "Schnelle Ladezeiten",
-      "Inhalte selbst pflegbar",
-    ],
-  },
-  {
-    id: "launch",
-    number: "04",
-    icon: Rocket,
-    heading: "Go Live & Support",
-    description:
-      "Wir bringen eure Website live und stehen euch auch danach mit Wartung und Support zur Seite.",
-    details: [
-      "Alles ausführlich getestet",
-      "Domain & Hosting eingerichtet",
-      "Wir begleiten den Start",
-      "Laufende Pflege & Updates",
-    ],
-    badge: { label: "Live", icon: Flag },
-  },
-];
+interface ProcessStepRow {
+  id: number;
+  position: number;
+  number: string;
+  icon_name: string;
+  heading: string;
+  description: string;
+  details: string[];
+  badge_label: string | null;
+  badge_icon: string | null;
+}
 
+function rowToStep(row: ProcessStepRow): Step {
+  return {
+    id: String(row.id),
+    number: row.number,
+    icon: resolveIcon(row.icon_name),
+    heading: row.heading,
+    description: row.description,
+    details: Array.isArray(row.details) ? row.details : [],
+    badge:
+      row.badge_label && row.badge_icon
+        ? { label: row.badge_label, icon: resolveIcon(row.badge_icon) }
+        : undefined,
+  };
+}
 function StepCard({ step }: { step: Step }) {
   const StepIcon = step.icon;
   return (
@@ -202,6 +185,28 @@ function StepRow({ step, index }: { step: Step; index: number }) {
 }
 
 export default function Prozesse() {
+  const [steps, setSteps] = useState<Step[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    supabase
+      .from("process_steps")
+      .select("*")
+      .order("position", { ascending: true })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          console.error("Prozess-Daten konnten nicht geladen werden:", error);
+          setSteps([]);
+          return;
+        }
+        setSteps((data as ProcessStepRow[]).map(rowToStep));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className="relative mx-auto max-w-5xl px-6 sm:px-8 md:px-12">
       {/* Vertikale Mittel-Linie */}
@@ -215,9 +220,30 @@ export default function Prozesse() {
       />
 
       <div className="relative space-y-16 sm:space-y-20 md:space-y-28">
-        {steps.map((step, i) => (
-          <StepRow key={step.id} step={step} index={i} />
-        ))}
+        {steps === null
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="pl-16 md:pl-0 md:grid md:grid-cols-2 md:items-center"
+              >
+                <div
+                  className={cn(
+                    "rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md p-5 sm:p-6 md:p-7",
+                    i % 2 === 0
+                      ? "md:col-start-1 md:pr-10"
+                      : "md:col-start-2 md:pl-10"
+                  )}
+                >
+                  <div className="h-6 w-36 rounded bg-white/10 animate-pulse" />
+                  <div className="mt-3 h-7 w-3/4 rounded bg-white/10 animate-pulse" />
+                  <div className="mt-3 h-4 w-full rounded bg-white/5 animate-pulse" />
+                  <div className="mt-2 h-4 w-5/6 rounded bg-white/5 animate-pulse" />
+                </div>
+              </div>
+            ))
+          : steps.map((step, i) => (
+              <StepRow key={step.id} step={step} index={i} />
+            ))}
       </div>
     </div>
   );
