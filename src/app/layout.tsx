@@ -16,8 +16,9 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  // Keine theme-color → iOS Safari (17+) macht die Adressleiste translucent
-  // und der Hero-Shader scheint durch. Status-Bar (Uhr/Akku) bleibt OS-native.
+  // KEINE theme-color → iOS Safari 17+ macht die URL-Bar translucent und
+  // sampelt den Hintergrund durch. Der Shader (fixed inset-0) scheint dann
+  // wirklich hindurch.
 };
 
 export default function RootLayout({
