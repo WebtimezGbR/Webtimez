@@ -121,11 +121,18 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
   html {
     @apply font-sans;
+    /* Mobile: voller Viewport ohne weiße Ränder beim Bouncen */
+    background-color: #0a0612;
+    /* iOS: Bounce-Bereich tönen, statt weiß */
+    -webkit-tap-highlight-color: transparent;
+    /* Sicherstellen, dass Body wirklich den vollen sichtbaren Viewport bekommt */
+    min-height: 100dvh;
+  }
+  body {
+    @apply bg-background text-foreground;
+    min-height: 100dvh;
   }
 
   /* Autofill: Browser-Default (weißer/gelber Block) überschreiben */

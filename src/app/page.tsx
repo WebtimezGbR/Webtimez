@@ -68,7 +68,7 @@ export default function Home() {
       <section
         id="home"
         ref={heroRef}
-        className="relative z-20 min-h-screen flex items-end overflow-hidden"
+        className="relative z-20 min-h-screen min-h-[100dvh] flex items-end overflow-hidden"
       >
         <motion.main
           className="relative mb-8 sm:mb-10 md:mb-12 mx-auto px-6 sm:px-8 md:px-12 max-w-7xl w-full origin-bottom"
