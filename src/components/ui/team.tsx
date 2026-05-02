@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { motion, useInView } from "framer-motion";
+import { supabase } from "@/lib/supabase/client";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const headingShadow =
@@ -67,38 +68,51 @@ function PersonPlaceholder({ name }: { name: string }) {
   );
 }
 
-const members: TeamMember[] = [
-  {
-    name: "Julius Sturm",
-    designation: "Gründer & Geschäftsführer",
-    socialLinks: [
-      {
-        icon: LinkedinIcon,
-        href: "https://www.linkedin.com/in/julius-constantin-kuhnigk-9bb099340/",
-        label: "LinkedIn",
-      },
-    ],
-  },
-  {
-    name: "Simon Engel",
-    designation: "Gründer & Vertrieb",
-    socialLinks: [
-      {
-        icon: LinkedinIcon,
-        href: "https://www.linkedin.com/in/simon-engel-504b262a9",
-        label: "LinkedIn",
-      },
-    ],
-  },
-  {
-    name: "Jonas Engel",
-    designation: "Gründer & Operations",
-  },
-];
+interface TeamMemberRow {
+  id: number;
+  position: number;
+  name: string;
+  designation: string;
+  image_path: string | null;
+  linkedin_url: string | null;
+}
+
+function rowToMember(row: TeamMemberRow): TeamMember {
+  return {
+    name: row.name,
+    designation: row.designation,
+    imageSrc: row.image_path ?? undefined,
+    socialLinks: row.linkedin_url
+      ? [{ icon: LinkedinIcon, href: row.linkedin_url, label: "LinkedIn" }]
+      : undefined,
+  };
+}
 
 export default function Team() {
   const ref = React.useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.15 });
+
+  const [members, setMembers] = React.useState<TeamMember[] | null>(null);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    supabase
+      .from("team_members")
+      .select("*")
+      .order("position", { ascending: true })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          console.error("Team-Daten konnten nicht geladen werden:", error);
+          setMembers([]);
+          return;
+        }
+        setMembers((data as TeamMemberRow[]).map(rowToMember));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div ref={ref} className="relative w-full">
@@ -133,7 +147,18 @@ export default function Team() {
 
         {/* Member Cards */}
         <div className="relative z-10 mx-auto grid w-full max-w-5xl grid-cols-1 gap-6 sm:gap-8 md:grid-cols-3 lg:gap-10">
-          {members.map((member, index) => (
+          {members === null
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md p-6 sm:p-8 flex flex-col items-center"
+                >
+                  <div className="h-32 w-32 sm:h-36 sm:w-36 rounded-full bg-white/5 animate-pulse" />
+                  <div className="mt-4 sm:mt-5 h-6 w-32 rounded bg-white/10 animate-pulse" />
+                  <div className="mt-2 h-4 w-40 rounded bg-white/5 animate-pulse" />
+                </div>
+              ))
+            : members.map((member, index) => (
             <motion.div
               key={member.name}
               initial={{ opacity: 0, y: 50 }}

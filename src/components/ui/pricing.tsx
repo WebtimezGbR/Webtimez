@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Check, Zap, Server } from "lucide-react";
+import { supabase } from "@/lib/supabase/client";
 
 const cn = (...classes: Array<string | false | null | undefined>) =>
   classes.filter(Boolean).join(" ");
@@ -17,50 +18,26 @@ interface Plan {
   isFeatured: boolean;
 }
 
-const plans: Plan[] = [
-  {
-    name: "Starter",
-    price: { brutto: 702, netto: 590 },
-    description: "Ideal für den ersten professionellen Online-Auftritt.",
-    features: [
-      "Für alle, die online sichtbar sein wollen",
-      "Landing Page",
-      "Mobil optimiert",
-      "Individuelles Design",
-      "Hosting",
-    ],
-    isFeatured: false,
-  },
-  {
-    name: "Business",
-    price: { brutto: 1178, netto: 990 },
-    description: "Für eure professionelle Marken-Website.",
-    features: [
-      "Professionelle Website",
-      "Maßgeschneidert nach euren Wünschen",
-      "Admin-Bereich",
-      "SEO-Optimierung",
-      "Kontaktformular",
-      "Bilder",
-      "Animationen",
-      "Hohe Flexibilität",
-      "Hosting",
-    ],
-    isFeatured: true,
-  },
-  {
-    name: "Premium",
-    price: { brutto: 4641, netto: 3900 },
-    description: "Für große Projekte mit komplexen Anforderungen.",
-    features: [
-      "Alles aus Business",
-      "Zahlungsanbindung",
-      "Kassensystem-Integration",
-      "Buchungs- & Reservierungssysteme",
-    ],
-    isFeatured: false,
-  },
-];
+interface PricingPlanRow {
+  id: number;
+  position: number;
+  name: string;
+  description: string;
+  price_netto: number;
+  price_brutto: number;
+  features: string[];
+  is_featured: boolean;
+}
+
+function rowToPlan(row: PricingPlanRow): Plan {
+  return {
+    name: row.name,
+    description: row.description,
+    price: { netto: row.price_netto, brutto: row.price_brutto },
+    features: Array.isArray(row.features) ? row.features : [],
+    isFeatured: row.is_featured,
+  };
+}
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const headingShadow =
@@ -72,6 +49,28 @@ export default function Pricing() {
   const cardsRef = useRef<HTMLDivElement>(null);
   const headerInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const cardsInView = useInView(cardsRef, { once: true, amount: 0.15 });
+
+  const [plans, setPlans] = useState<Plan[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    supabase
+      .from("pricing_plans")
+      .select("*")
+      .order("position", { ascending: true })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          console.error("Pricing-Daten konnten nicht geladen werden:", error);
+          setPlans([]);
+          return;
+        }
+        setPlans((data as PricingPlanRow[]).map(rowToPlan));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const [priceMode, setPriceMode] = useState<PriceMode>("netto");
 
@@ -178,7 +177,23 @@ export default function Pricing() {
           ref={cardsRef}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 md:gap-7 max-w-7xl w-full mx-auto"
         >
-          {plans.map((plan, index) => (
+          {plans === null
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md p-7 sm:p-8 md:p-10 h-[480px] flex flex-col"
+                >
+                  <div className="h-8 w-32 rounded bg-white/10 animate-pulse" />
+                  <div className="mt-3 h-4 w-48 rounded bg-white/5 animate-pulse" />
+                  <div className="mt-8 h-12 w-40 rounded bg-white/10 animate-pulse" />
+                  <div className="mt-8 space-y-3">
+                    <div className="h-4 w-full rounded bg-white/5 animate-pulse" />
+                    <div className="h-4 w-5/6 rounded bg-white/5 animate-pulse" />
+                    <div className="h-4 w-4/6 rounded bg-white/5 animate-pulse" />
+                  </div>
+                </div>
+              ))
+            : plans.map((plan, index) => (
             <motion.div
               key={plan.name}
               initial={{ opacity: 0, y: 60, scale: 0.95 }}
