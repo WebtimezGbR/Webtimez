@@ -124,7 +124,7 @@
   html {
     @apply font-sans;
     /* Mobile: voller Viewport ohne weiße Ränder beim Bouncen */
-    background-color: #0a0612;
+    background-color: #0f0a24;
     /* iOS: Bounce-Bereich tönen, statt weiß */
     -webkit-tap-highlight-color: transparent;
     /* Sicherstellen, dass Body wirklich den vollen sichtbaren Viewport bekommt */
