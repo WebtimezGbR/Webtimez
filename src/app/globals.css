@@ -123,15 +123,17 @@
   }
   html {
     @apply font-sans;
-    /* Mobile: voller Viewport ohne weiße Ränder beim Bouncen */
-    background-color: #0f0a24;
-    /* iOS: Bounce-Bereich tönen, statt weiß */
+    /* Schwarzer Untergrund — matched die Shader-Base. Status-Bar/URL-Bar
+       schwimmen optisch nahtlos auf dem Seiten-Hintergrund, kein sichtbarer Balken. */
+    background-color: #000000;
     -webkit-tap-highlight-color: transparent;
-    /* Sicherstellen, dass Body wirklich den vollen sichtbaren Viewport bekommt */
     min-height: 100dvh;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    /* WICHTIG: kein Body-Background — sonst entsteht oben/unten ein farbiger Balken
+       hinter den Browser-Bars. So ist der ganze Viewport vom Shader gefüllt. */
+    background-color: transparent;
     min-height: 100dvh;
   }
 
