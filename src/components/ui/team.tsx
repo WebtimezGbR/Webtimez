@@ -35,6 +35,32 @@ const LinkedinIcon = ({ className }: IconProps) => (
   </svg>
 );
 
+function Avatar({
+  name,
+  imageSrc,
+}: {
+  name: string;
+  imageSrc?: string;
+}) {
+  const [errored, setErrored] = React.useState(false);
+  React.useEffect(() => {
+    setErrored(false);
+  }, [imageSrc]);
+
+  if (!imageSrc || errored) {
+    return <PersonPlaceholder name={name} />;
+  }
+
+  return (
+    <img
+      src={imageSrc}
+      alt={name}
+      onError={() => setErrored(true)}
+      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+    />
+  );
+}
+
 function PersonPlaceholder({ name }: { name: string }) {
   const initials = name
     .split(" ")
@@ -78,10 +104,19 @@ interface TeamMemberRow {
 }
 
 function rowToMember(row: TeamMemberRow): TeamMember {
+  let imageSrc: string | undefined;
+  if (row.image_path) {
+    const { data } = supabase.storage
+      .from("Team")
+      .getPublicUrl(row.image_path);
+    imageSrc = data.publicUrl;
+    // eslint-disable-next-line no-console
+    console.log("[Team-Image]", row.name, "→", imageSrc);
+  }
   return {
     name: row.name,
     designation: row.designation,
-    imageSrc: row.image_path ?? undefined,
+    imageSrc,
     socialLinks: row.linkedin_url
       ? [{ icon: LinkedinIcon, href: row.linkedin_url, label: "LinkedIn" }]
       : undefined,
@@ -183,15 +218,7 @@ export default function Team() {
                 className="relative z-10 h-32 w-32 sm:h-36 sm:w-36 overflow-hidden rounded-full border-4 border-white/15 transition-all duration-500 ease-out group-hover:border-[#ff5ce0] group-hover:scale-105"
                 style={{ transitionDelay: `${index * 80}ms` }}
               >
-                {member.imageSrc ? (
-                  <img
-                    src={member.imageSrc}
-                    alt={member.name}
-                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-                  />
-                ) : (
-                  <PersonPlaceholder name={member.name} />
-                )}
+                <Avatar name={member.name} imageSrc={member.imageSrc} />
               </div>
 
               {/* Name + Rolle */}

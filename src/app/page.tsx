@@ -14,20 +14,27 @@ import Contact from "@/components/ui/contact";
 import Footer from "@/components/ui/footer";
 import CookieConsent from "@/components/ui/cookie-consent";
 import { SectionDivider, ScrollProgressBar } from "@/components/ui/section-divider";
+import { useSetting, type HeroSettings } from "@/lib/supabase/settings";
 
-const aiTitles = [
-  "Entwicklung",
-  "Design",
-  "Optimierung",
-  "Hosting",
-  "Kontrolle",
-];
+const FALLBACK_HERO: HeroSettings = {
+  tagline:
+    "Von Design bis Umsetzung – wir kümmern uns um alles, was ihr für eine professionelle Website braucht.",
+  animated_words: ["Entwicklung", "Design", "Optimierung", "Hosting", "Kontrolle"],
+  button_primary_label: "Kostenlose Beratung",
+  button_primary_href: "#contact",
+  button_secondary_label: "Leistungen",
+  button_secondary_href: "#services",
+};
 const ease = [0.22, 1, 0.36, 1] as const;
 const headingShadow =
   "0 2px 18px rgba(0,0,0,0.55), 0 1px 4px rgba(0,0,0,0.4)";
 const bodyShadow = "0 1px 8px rgba(0,0,0,0.5)";
 
 export default function Home() {
+  const heroFromDb = useSetting<HeroSettings>("hero");
+  const hero = heroFromDb ?? FALLBACK_HERO;
+  const aiTitles = hero.animated_words?.length ? hero.animated_words : FALLBACK_HERO.animated_words;
+
   const [titleNumber, setTitleNumber] = useState(0);
 
   const heroRef = useRef<HTMLElement>(null);
@@ -122,8 +129,7 @@ export default function Home() {
               }
               transition={{ duration: 0.7, ease, delay: 0.4 }}
             >
-              Von Design bis Umsetzung – wir kümmern uns um alles, was ihr für
-              eine professionelle Website braucht.
+              {hero.tagline}
             </motion.p>
 
             <motion.div
@@ -135,16 +141,16 @@ export default function Home() {
               transition={{ duration: 0.7, ease, delay: 0.55 }}
             >
               <a
-                href="#services"
+                href={hero.button_secondary_href}
                 className="w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white font-normal text-lg sm:text-xl md:text-2xl transition-all duration-200 hover:bg-black/55 hover:border-white/40 cursor-pointer tracking-wide text-center"
               >
-                Leistungen
+                {hero.button_secondary_label}
               </a>
               <a
-                href="#contact"
+                href={hero.button_primary_href}
                 className="w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 rounded-full bg-white text-black font-normal text-lg sm:text-xl md:text-2xl transition-all duration-200 hover:bg-white/90 cursor-pointer tracking-wide flex items-center justify-center gap-2"
               >
-                Kostenlose Beratung <MoveRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                {hero.button_primary_label} <MoveRight className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
             </motion.div>
           </div>

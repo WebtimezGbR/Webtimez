@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSetting, type CookieSettings } from "@/lib/supabase/settings";
 
 const STORAGE_KEY = "webtimez_cookie_consent";
 const CONSENT_EVENT = "webtimez:consent-change";
@@ -9,6 +10,14 @@ const ease = [0.22, 1, 0.36, 1] as const;
 const headingShadow =
   "0 2px 18px rgba(0,0,0,0.55), 0 1px 4px rgba(0,0,0,0.4)";
 const bodyShadow = "0 1px 8px rgba(0,0,0,0.5)";
+
+const FALLBACK_COOKIES: CookieSettings = {
+  heading: "Datenschutzeinstellungen",
+  body: "Wir verwenden Cookies und vergleichbare Technologien (z. B. localStorage) auf dieser Website. Einige sind technisch notwendig, damit die Seite funktioniert und deine Anfragen über das Kontaktformular verarbeitet werden können. Andere sind optional und helfen uns dabei, dein Nutzererlebnis zu verbessern oder die Reichweite zu messen. Optionale Cookies setzen wir nur mit deiner Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TTDSG. Personenbezogene Daten (z. B. IP-Adresse) können dabei verarbeitet werden.",
+  footnote: "Mehr Infos in der",
+  accept_label: "Alle akzeptieren",
+  reject_label: "Alle ablehnen",
+};
 
 export type CookieConsentValue = "accepted" | "rejected" | null;
 
@@ -42,6 +51,8 @@ export function useCookieConsent(): CookieConsentValue {
 export default function CookieConsent() {
   const consent = useCookieConsent();
   const [mounted, setMounted] = useState(false);
+  const settingsFromDb = useSetting<CookieSettings>("cookies");
+  const settings = settingsFromDb ?? FALLBACK_COOKIES;
 
   useEffect(() => {
     setMounted(true);
@@ -79,21 +90,13 @@ export default function CookieConsent() {
               className="text-base sm:text-lg md:text-xl font-semibold text-white tracking-wide mb-2 sm:mb-3"
               style={{ textShadow: headingShadow }}
             >
-              Datenschutzeinstellungen
+              {settings.heading}
             </h4>
             <p
-              className="text-sm sm:text-base font-light text-white/80 tracking-wide leading-relaxed"
+              className="text-sm sm:text-base font-light text-white/80 tracking-wide leading-relaxed whitespace-pre-line"
               style={{ textShadow: bodyShadow }}
             >
-              Wir verwenden Cookies und vergleichbare Technologien (z. B.
-              localStorage) auf dieser Website. Einige sind technisch
-              notwendig, damit die Seite funktioniert und deine Anfragen über
-              das Kontaktformular verarbeitet werden können. Andere sind
-              optional und helfen uns dabei, dein Nutzererlebnis zu verbessern
-              oder die Reichweite zu messen. Optionale Cookies setzen wir nur
-              mit deiner Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO und
-              § 25 Abs. 1 TTDSG. Personenbezogene Daten (z. B. IP-Adresse)
-              können dabei verarbeitet werden.
+              {settings.body}
             </p>
             <p
               className="mt-3 text-sm sm:text-base font-light text-white/70 tracking-wide leading-relaxed"
@@ -101,7 +104,7 @@ export default function CookieConsent() {
             >
               Du kannst deine Einwilligung jederzeit mit Wirkung für die
               Zukunft über den Link „Cookies" im Footer widerrufen oder
-              anpassen. Mehr Informationen findest du in unserer{" "}
+              anpassen. {settings.footnote}{" "}
               <a
                 href="/datenschutz"
                 className="text-[#ff5ce0] hover:text-[#ff5ce0]/80 underline underline-offset-4 decoration-[#ff5ce0]/40 transition-colors"
@@ -124,13 +127,13 @@ export default function CookieConsent() {
                 className="h-11 sm:h-12 px-5 rounded-full border border-white/25 bg-white/10 hover:bg-white/15 hover:border-white/45 text-white font-semibold text-sm sm:text-base tracking-wide transition-all duration-200 cursor-pointer"
                 style={{ textShadow: bodyShadow }}
               >
-                Alle ablehnen
+                {settings.reject_label}
               </button>
               <button
                 onClick={() => setCookieConsent("accepted")}
                 className="h-11 sm:h-12 px-5 rounded-full bg-[#ff5ce0] hover:bg-[#ff5ce0]/90 text-black font-semibold text-sm sm:text-base tracking-wide transition-all duration-200 hover:shadow-[0_0_30px_rgba(255,92,224,0.5)] cursor-pointer"
               >
-                Alle akzeptieren
+                {settings.accept_label}
               </button>
             </div>
           </motion.div>

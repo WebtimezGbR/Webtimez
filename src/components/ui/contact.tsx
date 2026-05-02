@@ -4,15 +4,27 @@ import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Mail, MessageSquare, User, ArrowRight, Send, Phone, Clock } from "lucide-react";
 import { useCookieConsent, setCookieConsent } from "./cookie-consent";
+import { useSetting, type ContactSettings } from "@/lib/supabase/settings";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const headingShadow =
   "0 2px 18px rgba(0,0,0,0.55), 0 1px 4px rgba(0,0,0,0.4)";
 const bodyShadow = "0 1px 8px rgba(0,0,0,0.5)";
 
+const FALLBACK_CONTACT: ContactSettings = {
+  heading: "Lass uns reden.",
+  tagline: "Oder schreib uns direkt an",
+  email: "team@webtimez.com",
+  phone_display: "+49 152 59529994",
+  phone_link: "+4915259529994",
+  hours: "Mo–Sa, 9–20 Uhr",
+};
+
 export default function Contact() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.15 });
+  const settingsFromDb = useSetting<ContactSettings>("contact");
+  const settings = settingsFromDb ?? FALLBACK_CONTACT;
 
   const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
@@ -72,30 +84,30 @@ export default function Contact() {
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-wide mb-3 sm:mb-4"
             style={{ textShadow: headingShadow }}
           >
-            Lass uns reden.
+            {settings.heading}
           </h3>
 
           <p
             className="text-base sm:text-lg md:text-xl font-light text-white/85 tracking-wide max-w-2xl"
             style={{ textShadow: bodyShadow }}
           >
-            Oder schreib uns direkt an{" "}
+            {settings.tagline}{" "}
             <a
-              href="mailto:team@webtimez.com"
+              href={`mailto:${settings.email}`}
               className="text-[#ff5ce0] hover:text-[#ff5ce0]/80 underline underline-offset-4 decoration-[#ff5ce0]/40 transition-colors"
             >
-              team@webtimez.com
+              {settings.email}
             </a>
           </p>
 
           <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
             <a
-              href="tel:+4915259529994"
+              href={`tel:${settings.phone_link}`}
               className="inline-flex items-center gap-2 text-sm sm:text-base text-white/85 hover:text-[#ff5ce0] tracking-wide transition-colors"
               style={{ textShadow: bodyShadow }}
             >
               <Phone className="h-4 w-4 text-[#ff5ce0]" />
-              +49 152 59529994
+              {settings.phone_display}
             </a>
             <span
               className="hidden sm:inline-block h-1 w-1 rounded-full bg-white/40"
@@ -106,7 +118,7 @@ export default function Contact() {
               style={{ textShadow: bodyShadow }}
             >
               <Clock className="h-4 w-4 text-[#ff5ce0]" />
-              Mo–Sa, 9–20 Uhr
+              {settings.hours}
             </span>
           </div>
         </motion.div>

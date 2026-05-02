@@ -5,12 +5,30 @@ import { ArrowLeft } from "lucide-react";
 import { ShaderBackground } from "@/components/ui/hero-shader";
 import Footer from "@/components/ui/footer";
 import CookieConsent from "@/components/ui/cookie-consent";
+import {
+  useSetting,
+  type ImpressumSettings,
+} from "@/lib/supabase/settings";
 
 const headingShadow =
   "0 2px 18px rgba(0,0,0,0.55), 0 1px 4px rgba(0,0,0,0.4)";
 const bodyShadow = "0 1px 8px rgba(0,0,0,0.5)";
 
+const FALLBACK_IMPRESSUM: ImpressumSettings = {
+  company: "Webtimez GbR",
+  owners: "Julius Sturm\nSimon Engel",
+  address: "Johann-Reintgen-Straße 19\n50999 Köln\nDeutschland",
+  phone_display: "+49 152 59529994",
+  phone_link: "+4915259529994",
+  email: "team@webtimez.com",
+  ust_id: "[USt-ID einfügen, sobald vorhanden]",
+  press_responsible_name: "Julius Sturm",
+  press_responsible_address: "Johann-Reintgen-Straße 19\n50999 Köln",
+};
+
 export default function ImpressumPage() {
+  const settingsFromDb = useSetting<ImpressumSettings>("impressum");
+  const s = settingsFromDb ?? FALLBACK_IMPRESSUM;
   return (
     <ShaderBackground>
       {/* Top-Bar */}
@@ -50,14 +68,13 @@ export default function ImpressumPage() {
               >
                 Angaben gemäß § 5 TMG
               </h2>
-              <p style={{ textShadow: bodyShadow }}>
-                Webtimez GbR
-                <br />
-                Johann-Reintgen-Straße 19
-                <br />
-                50999 Köln
-                <br />
-                Deutschland
+              <p
+                className="whitespace-pre-line"
+                style={{ textShadow: bodyShadow }}
+              >
+                {s.company}
+                {"\n"}
+                {s.address}
               </p>
             </div>
 
@@ -68,10 +85,11 @@ export default function ImpressumPage() {
               >
                 Vertreten durch
               </h2>
-              <p style={{ textShadow: bodyShadow }}>
-                Julius Sturm
-                <br />
-                Simon Engel
+              <p
+                className="whitespace-pre-line"
+                style={{ textShadow: bodyShadow }}
+              >
+                {s.owners}
               </p>
             </div>
 
@@ -85,18 +103,18 @@ export default function ImpressumPage() {
               <p style={{ textShadow: bodyShadow }}>
                 Telefon:{" "}
                 <a
-                  href="tel:+4915259529994"
+                  href={`tel:${s.phone_link}`}
                   className="text-[#ff5ce0] hover:text-[#ff5ce0]/80 underline underline-offset-4 decoration-[#ff5ce0]/40 transition-colors"
                 >
-                  +49 152 59529994
+                  {s.phone_display}
                 </a>
                 <br />
                 E-Mail:{" "}
                 <a
-                  href="mailto:team@webtimez.com"
+                  href={`mailto:${s.email}`}
                   className="text-[#ff5ce0] hover:text-[#ff5ce0]/80 underline underline-offset-4 decoration-[#ff5ce0]/40 transition-colors"
                 >
-                  team@webtimez.com
+                  {s.email}
                 </a>
               </p>
             </div>
@@ -112,9 +130,7 @@ export default function ImpressumPage() {
                 Umsatzsteuer-Identifikationsnummer gemäß § 27 a
                 Umsatzsteuergesetz:
                 <br />
-                <span className="text-white/60">
-                  [USt-ID einfügen, sobald vorhanden]
-                </span>
+                <span className="text-white/60">{s.ust_id}</span>
               </p>
             </div>
 
@@ -125,12 +141,13 @@ export default function ImpressumPage() {
               >
                 Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
               </h2>
-              <p style={{ textShadow: bodyShadow }}>
-                Julius Sturm
-                <br />
-                Johann-Reintgen-Straße 19
-                <br />
-                50999 Köln
+              <p
+                className="whitespace-pre-line"
+                style={{ textShadow: bodyShadow }}
+              >
+                {s.press_responsible_name}
+                {"\n"}
+                {s.press_responsible_address}
               </p>
             </div>
 

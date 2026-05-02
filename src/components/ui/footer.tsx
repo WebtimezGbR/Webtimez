@@ -4,6 +4,15 @@ import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Mail } from "lucide-react";
 import { setCookieConsent } from "./cookie-consent";
+import { useSetting, type FooterSettings } from "@/lib/supabase/settings";
+
+const FALLBACK_FOOTER: FooterSettings = {
+  tagline:
+    "Von Design bis Umsetzung — wir kümmern uns um alles, was ihr für eine professionelle Website braucht.",
+  mail: "team@webtimez.com",
+  instagram_url: "https://www.instagram.com/webtimez_/",
+  copyright_name: "Webtimez",
+};
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const headingShadow =
@@ -32,6 +41,8 @@ const legalLinks: Array<{
 export default function Footer() {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.15 });
+  const settingsFromDb = useSetting<FooterSettings>("footer");
+  const settings = settingsFromDb ?? FALLBACK_FOOTER;
 
   return (
     <footer
@@ -69,15 +80,14 @@ export default function Footer() {
               className="mt-3 text-sm sm:text-base font-light text-white/75 tracking-wide max-w-xl"
               style={{ textShadow: bodyShadow }}
             >
-              Von Design bis Umsetzung — wir kümmern uns um alles, was ihr für
-              eine professionelle Website braucht.
+              {settings.tagline}
             </p>
             <a
-              href="mailto:team@webtimez.com"
+              href={`mailto:${settings.mail}`}
               className="mt-4 inline-flex items-center gap-2 text-sm sm:text-base text-[#ff5ce0] hover:text-[#ff5ce0]/80 underline underline-offset-4 decoration-[#ff5ce0]/40 transition-colors"
             >
               <Mail className="h-4 w-4" />
-              team@webtimez.com
+              {settings.mail}
             </a>
           </div>
 
@@ -110,7 +120,7 @@ export default function Footer() {
           {/* Social Icons */}
           <div className="mt-8 flex flex-wrap justify-center gap-5 sm:gap-6">
             <a
-              href="https://www.instagram.com/webtimez_/"
+              href={settings.instagram_url}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -144,7 +154,7 @@ export default function Footer() {
               className="text-white/60 tracking-wide text-center sm:text-left"
               style={{ textShadow: bodyShadow }}
             >
-              © {new Date().getFullYear()} Webtimez. Alle Rechte vorbehalten.
+              © {new Date().getFullYear()} {settings.copyright_name}. Alle Rechte vorbehalten.
             </span>
             <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
               {legalLinks.map((link) =>
