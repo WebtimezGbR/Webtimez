@@ -4,13 +4,23 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Check, Zap, Server } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
-import { useSectionIntro } from "@/lib/supabase/settings";
+import {
+  useSectionIntro,
+  useSetting,
+  type PricingHostingSettings,
+} from "@/lib/supabase/settings";
 
 const PRICING_INTRO_FALLBACK = {
   eyebrow: "Flexibel & transparent",
   heading: "Das passende Paket für dich",
   subheading:
     "Alle Preise sind Startpreise (Einmalzahlung) — der finale Preis richtet sich nach euren konkreten Anforderungen.",
+};
+
+const PRICING_HOSTING_FALLBACK: PricingHostingSettings = {
+  heading: "Hosting für alle Pakete",
+  body:
+    "Nach Auftragsabschluss läuft das Hosting monatlich ab 20 € pro Monat weiter — gilt einheitlich für Starter, Business und Premium.",
 };
 
 const cn = (...classes: Array<string | false | null | undefined>) =>
@@ -58,6 +68,8 @@ export default function Pricing() {
   const headerInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const cardsInView = useInView(cardsRef, { once: true, amount: 0.15 });
   const intro = useSectionIntro("pricing", PRICING_INTRO_FALLBACK);
+  const hostingFromDb = useSetting<PricingHostingSettings>("pricing_hosting");
+  const hosting = hostingFromDb ?? PRICING_HOSTING_FALLBACK;
 
   const [plans, setPlans] = useState<Plan[] | null>(null);
 
@@ -307,15 +319,13 @@ export default function Pricing() {
               className="text-base sm:text-lg font-semibold text-white tracking-wide mb-1"
               style={{ textShadow: headingShadow }}
             >
-              Hosting für alle Pakete
+              {hosting.heading}
             </h3>
             <p
-              className="text-sm sm:text-base text-white/80 tracking-wide leading-relaxed"
+              className="text-sm sm:text-base text-white/80 tracking-wide leading-relaxed whitespace-pre-line"
               style={{ textShadow: bodyShadow }}
             >
-              Nach Auftragsabschluss läuft das Hosting monatlich ab{" "}
-              <span className="font-semibold text-white">20 € pro Monat</span>{" "}
-              weiter — gilt einheitlich für Starter, Business und Premium.
+              {hosting.body}
             </p>
           </div>
         </motion.div>

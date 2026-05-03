@@ -70,6 +70,11 @@ export interface BrandingSettings {
   favicon_path: string;
 }
 
+export interface PricingHostingSettings {
+  heading: string;
+  body: string;
+}
+
 export type SettingKey =
   | "hero"
   | "footer"
@@ -79,7 +84,8 @@ export type SettingKey =
   | "impressum"
   | "datenschutz"
   | "section_intros"
-  | "branding";
+  | "branding"
+  | "pricing_hosting";
 
 export async function fetchSetting<T>(key: SettingKey): Promise<T | null> {
   const { data, error } = await supabase

@@ -10,7 +10,16 @@ import {
   AdminRowActions,
   AdminToast,
   inputClass,
+  textareaClass,
 } from "@/components/admin/AdminUI";
+import { SettingsEditor } from "@/components/admin/SettingsEditor";
+import type { PricingHostingSettings } from "@/lib/supabase/settings";
+
+const HOSTING_FALLBACK: PricingHostingSettings = {
+  heading: "Hosting für alle Pakete",
+  body:
+    "Nach Auftragsabschluss läuft das Hosting monatlich ab 20 € pro Monat weiter — gilt einheitlich für Starter, Business und Premium.",
+};
 
 interface Plan {
   id: number;
@@ -336,6 +345,41 @@ export default function PricingAdminPage() {
           ))}
         </div>
       )}
+
+      <div className="pt-6 mt-6 border-t border-white/10">
+        <SettingsEditor<PricingHostingSettings>
+          settingKey="pricing_hosting"
+          title="Hosting-Hinweis (unter den Paketen)"
+          description="Der Hinweis-Block zum monatlichen Hosting, der unterhalb der drei Pakete angezeigt wird."
+          initialFallback={HOSTING_FALLBACK}
+          renderForm={(value, onChange) => (
+            <div className="grid gap-4">
+              <AdminLabel label="Überschrift">
+                <input
+                  type="text"
+                  value={value.heading}
+                  onChange={(e) =>
+                    onChange({ ...value, heading: e.target.value })
+                  }
+                  placeholder="z. B. Hosting für alle Pakete"
+                  className={inputClass}
+                />
+              </AdminLabel>
+              <AdminLabel label="Text (Preis und Beschreibung)">
+                <textarea
+                  rows={3}
+                  value={value.body}
+                  onChange={(e) =>
+                    onChange({ ...value, body: e.target.value })
+                  }
+                  placeholder="z. B. Nach Auftragsabschluss läuft das Hosting monatlich ab 20 € pro Monat weiter…"
+                  className={textareaClass}
+                />
+              </AdminLabel>
+            </div>
+          )}
+        />
+      </div>
 
       <AdminToast message={toast} />
     </div>
