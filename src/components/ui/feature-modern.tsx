@@ -271,7 +271,7 @@ function ServiceCard({ service, index, inView }: CardProps) {
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.6, ease, delay: 0.2 + index * 0.1 }}
       whileHover={{ y: -6 }}
-      className="group relative h-[440px] sm:h-[460px] w-full flex flex-col justify-between rounded-3xl p-7 sm:p-8 border border-white/15 bg-black/45 backdrop-blur-md overflow-hidden transition-all duration-500 hover:border-[#ff5ce0]/40 hover:shadow-[0_0_40px_rgba(255,92,224,0.18)]"
+      className="group relative h-[440px] sm:h-[460px] w-full flex flex-col rounded-3xl p-7 sm:p-8 border border-white/15 bg-black/45 backdrop-blur-md overflow-hidden transition-all duration-500 hover:border-[#ff5ce0]/40 hover:shadow-[0_0_40px_rgba(255,92,224,0.18)]"
     >
       {/* Subtle pink/lila gradient overlay */}
       <div
@@ -287,8 +287,8 @@ function ServiceCard({ service, index, inView }: CardProps) {
         style={{ background: "rgba(255,92,224,0.25)" }}
       />
 
-      {/* Top: Number + Icon */}
-      <div className="relative z-10 flex items-start justify-between">
+      {/* Top: Number + Icon — feste Höhe für gleiche Icon-Position über alle Cards */}
+      <div className="relative z-10 flex items-start justify-between h-14 shrink-0">
         <span
           className="text-sm font-mono text-white/60 tracking-wider"
           style={{ textShadow: bodyShadow }}
@@ -300,26 +300,26 @@ function ServiceCard({ service, index, inView }: CardProps) {
         </div>
       </div>
 
-      {/* Middle: Grafik */}
-      <div className="relative z-10 flex items-center justify-center px-2 transition-transform duration-500 ease-out group-hover:scale-[1.04]">
+      {/* Middle: Grafik — feste Höhe, vertikal zentriert */}
+      <div className="relative z-10 flex items-center justify-center px-2 h-[150px] sm:h-[160px] shrink-0 transition-transform duration-500 ease-out group-hover:scale-[1.04]">
         {service.graphic}
       </div>
 
-      {/* Bottom: Title + Description */}
-      <div className="relative z-10">
-        <h4
-          className="mb-3 text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-wide uppercase"
-          style={{ textShadow: headingShadow }}
-        >
-          {service.title}
-        </h4>
-        <p
-          className="text-sm sm:text-base text-white/80 leading-relaxed"
-          style={{ textShadow: bodyShadow }}
-        >
-          {service.description}
-        </p>
-      </div>
+      {/* Title — feste Höhe, unten ausgerichtet → alle Überschriften enden auf gleicher Y-Linie */}
+      <h4
+        className="relative z-10 text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-wide uppercase h-[4.5rem] sm:h-[5rem] flex items-end shrink-0"
+        style={{ textShadow: headingShadow }}
+      >
+        {service.title}
+      </h4>
+
+      {/* Description — startet direkt unter der Title-Linie, gleicher Abstand bei allen Cards */}
+      <p
+        className="relative z-10 text-sm sm:text-base text-white/80 leading-relaxed mt-3 shrink-0"
+        style={{ textShadow: bodyShadow }}
+      >
+        {service.description}
+      </p>
     </motion.div>
   );
 }
