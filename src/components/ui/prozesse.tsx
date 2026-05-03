@@ -142,7 +142,7 @@ function StepRow({ step, index }: { step: Step; index: number }) {
               inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -8 }
             }
             transition={{ duration: 0.5, ease, delay: 0.45 }}
-            className="absolute left-1/2 -translate-x-1/2 -top-7 sm:-top-8 inline-flex items-center gap-1.5 rounded-full bg-[#ff5ce0] text-black text-[10px] sm:text-xs font-bold tracking-wider uppercase px-2.5 py-1 whitespace-nowrap"
+            className="absolute left-1/2 -translate-x-1/2 -top-7 sm:-top-8 inline-flex items-center gap-1.5 rounded-full bg-[#ff5ce0] text-black text-xs font-bold tracking-wider uppercase px-2.5 py-1 whitespace-nowrap"
             style={{
               boxShadow: "0 0 20px rgba(255,92,224,0.4)",
             }}

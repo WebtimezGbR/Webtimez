@@ -205,6 +205,8 @@ export default function Contact() {
             style={{ display: "none" }}
             tabIndex={-1}
             autoComplete="off"
+            aria-hidden="true"
+            aria-label="Spam-Schutz, nicht ausfüllen"
           />
 
           {/* Cookie-Hinweis bei Ablehnung */}

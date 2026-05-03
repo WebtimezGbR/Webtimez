@@ -351,7 +351,7 @@ export default function Portfolio() {
                 transition={{ duration: 0.4, ease }}
                 className="mt-8 sm:mt-12 md:mt-14 lg:mt-16 text-center"
               >
-                <span className="inline-block text-[10px] sm:text-xs uppercase tracking-widest text-white/80 px-3 py-1 rounded-full bg-white/10 border border-white/15 mb-3">
+                <span className="inline-block text-xs uppercase tracking-widest text-white/80 px-3 py-1 rounded-full bg-white/10 border border-white/15 mb-3">
                   {frontProject.category}
                 </span>
                 <h3
