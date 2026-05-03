@@ -66,6 +66,10 @@ export interface SectionIntrosSettings {
   prozess: SectionIntro;
 }
 
+export interface BrandingSettings {
+  favicon_path: string;
+}
+
 export type SettingKey =
   | "hero"
   | "footer"
@@ -74,7 +78,8 @@ export type SettingKey =
   | "colors"
   | "impressum"
   | "datenschutz"
-  | "section_intros";
+  | "section_intros"
+  | "branding";
 
 export async function fetchSetting<T>(key: SettingKey): Promise<T | null> {
   const { data, error } = await supabase

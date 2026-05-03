@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { FaviconInjector } from "@/components/ui/favicon-injector";
 
 export const metadata: Metadata = {
   title: "WEBTIMEZ",
@@ -32,6 +33,7 @@ export default function RootLayout({
         className="min-h-full flex flex-col overflow-x-hidden text-white"
         style={{ fontFamily: "'Neue Haas Grotesk Display Pro', 'Neue Haas Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif" }}
       >
+        <FaviconInjector />
         {children}
       </body>
     </html>

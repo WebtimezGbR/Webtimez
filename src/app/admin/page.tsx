@@ -14,6 +14,7 @@ import {
   FileText,
   Footprints,
   Type,
+  Image as ImageIcon,
 } from "lucide-react";
 
 const headingShadow =
@@ -21,6 +22,12 @@ const headingShadow =
 const bodyShadow = "0 1px 8px rgba(0,0,0,0.5)";
 
 const sections = [
+  {
+    href: "/admin/branding",
+    label: "Branding",
+    description: "Favicon (Browser-Tab-Icon) hochladen oder zurücksetzen.",
+    icon: ImageIcon,
+  },
   {
     href: "/admin/hero",
     label: "Hero",
