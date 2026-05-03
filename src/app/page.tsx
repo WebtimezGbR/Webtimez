@@ -14,7 +14,13 @@ import Contact from "@/components/ui/contact";
 import Footer from "@/components/ui/footer";
 import CookieConsent from "@/components/ui/cookie-consent";
 import { SectionDivider, ScrollProgressBar } from "@/components/ui/section-divider";
-import { useSetting, type HeroSettings } from "@/lib/supabase/settings";
+import { useSetting, useSectionIntro, type HeroSettings } from "@/lib/supabase/settings";
+
+const PROZESS_INTRO_FALLBACK = {
+  eyebrow: "",
+  heading: "Unser Prozess",
+  subheading: "In vier Schritten zu eurer Website",
+};
 
 const FALLBACK_HERO: HeroSettings = {
   tagline:
@@ -34,6 +40,7 @@ export default function Home() {
   const heroFromDb = useSetting<HeroSettings>("hero");
   const hero = heroFromDb ?? FALLBACK_HERO;
   const aiTitles = hero.animated_words?.length ? hero.animated_words : FALLBACK_HERO.animated_words;
+  const prozessIntro = useSectionIntro("prozess", PROZESS_INTRO_FALLBACK);
 
   const [titleNumber, setTitleNumber] = useState(0);
 
@@ -180,17 +187,25 @@ export default function Home() {
           }
           transition={{ duration: 0.7, ease }}
         >
+          {prozessIntro.eyebrow && (
+            <span
+              className="block text-xs sm:text-sm font-semibold text-[#ff5ce0] tracking-[0.4em] uppercase mb-3"
+              style={{ textShadow: bodyShadow }}
+            >
+              {prozessIntro.eyebrow}
+            </span>
+          )}
           <h3
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-wide mb-2 sm:mb-3"
             style={{ textShadow: headingShadow }}
           >
-            Unser Prozess
+            {prozessIntro.heading}
           </h3>
           <p
             className="text-base sm:text-lg md:text-xl font-light text-white/85 tracking-wide"
             style={{ textShadow: bodyShadow }}
           >
-            In vier Schritten zu eurer Website
+            {prozessIntro.subheading}
           </p>
         </motion.div>
 

@@ -16,6 +16,13 @@ import {
 import useEmblaCarousel from "embla-carousel-react";
 import Balancer from "react-wrap-balancer";
 import { supabase } from "@/lib/supabase/client";
+import { useSectionIntro } from "@/lib/supabase/settings";
+
+const LEISTUNGEN_INTRO_FALLBACK = {
+  eyebrow: "",
+  heading: "Unsere Leistungen",
+  subheading: "Alles aus einer Hand – von der Idee bis zum fertigen Projekt",
+};
 
 // Icon-Lookup: DB speichert nur den Namen als Text, hier mappen wir auf Components.
 const ICONS: Record<string, React.ElementType> = {
@@ -329,6 +336,7 @@ function ServiceCard({ service, index, inView }: CardProps) {
 export default function Feature() {
   const ref = React.useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.15 });
+  const intro = useSectionIntro("leistungen", LEISTUNGEN_INTRO_FALLBACK);
 
   const [services, setServices] = React.useState<Service[] | null>(null);
 
@@ -408,19 +416,25 @@ export default function Feature() {
           transition={{ duration: 0.7, ease }}
           className="flex flex-col gap-3 sm:gap-4 mb-10 sm:mb-14"
         >
+          {intro.eyebrow && (
+            <span
+              className="text-xs sm:text-sm font-semibold text-[#ff5ce0] tracking-[0.4em] uppercase"
+              style={{ textShadow: bodyShadow }}
+            >
+              {intro.eyebrow}
+            </span>
+          )}
           <h3
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-wide"
             style={{ textShadow: headingShadow }}
           >
-            <Balancer>Unsere Leistungen</Balancer>
+            <Balancer>{intro.heading}</Balancer>
           </h3>
           <h4
             className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light text-white/85 tracking-wide"
             style={{ textShadow: bodyShadow }}
           >
-            <Balancer>
-              Alles aus einer Hand – von der Idee bis zum fertigen Projekt
-            </Balancer>
+            <Balancer>{intro.subheading}</Balancer>
           </h4>
         </motion.div>
 

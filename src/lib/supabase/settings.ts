@@ -52,6 +52,20 @@ export interface ColorSettings {
   accent: string;
 }
 
+export interface SectionIntro {
+  eyebrow: string;
+  heading: string;
+  subheading: string;
+}
+
+export interface SectionIntrosSettings {
+  team: SectionIntro;
+  portfolio: SectionIntro;
+  pricing: SectionIntro;
+  leistungen: SectionIntro;
+  prozess: SectionIntro;
+}
+
 export type SettingKey =
   | "hero"
   | "footer"
@@ -59,7 +73,8 @@ export type SettingKey =
   | "cookies"
   | "colors"
   | "impressum"
-  | "datenschutz";
+  | "datenschutz"
+  | "section_intros";
 
 export async function fetchSetting<T>(key: SettingKey): Promise<T | null> {
   const { data, error } = await supabase
@@ -100,4 +115,12 @@ export async function saveSetting<T>(key: SettingKey, value: T) {
       updated_at: new Date().toISOString(),
     });
   return error;
+}
+
+export function useSectionIntro(
+  section: keyof SectionIntrosSettings,
+  fallback: SectionIntro
+): SectionIntro {
+  const intros = useSetting<SectionIntrosSettings>("section_intros");
+  return intros?.[section] ?? fallback;
 }

@@ -3,6 +3,14 @@
 import * as React from "react";
 import { motion, useInView } from "framer-motion";
 import { supabase } from "@/lib/supabase/client";
+import { useSectionIntro } from "@/lib/supabase/settings";
+
+const TEAM_INTRO_FALLBACK = {
+  eyebrow: "U N S E R",
+  heading: "Team",
+  subheading:
+    "Drei Gründer, eine Vision — wir bringen eure Website von der ersten Idee bis zum Live-Gang.",
+};
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const headingShadow =
@@ -126,6 +134,7 @@ function rowToMember(row: TeamMemberRow): TeamMember {
 export default function Team() {
   const ref = React.useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.15 });
+  const intro = useSectionIntro("team", TEAM_INTRO_FALLBACK);
 
   const [members, setMembers] = React.useState<TeamMember[] | null>(null);
 
@@ -159,24 +168,25 @@ export default function Team() {
           transition={{ duration: 0.7, ease }}
           className="relative z-10 flex flex-col items-center text-center mb-12 sm:mb-16"
         >
-          <span
-            className="text-xs sm:text-sm font-semibold text-[#ff5ce0] tracking-[0.4em] uppercase mb-3 sm:mb-4"
-            style={{ textShadow: bodyShadow }}
-          >
-            U N S E R
-          </span>
+          {intro.eyebrow && (
+            <span
+              className="text-xs sm:text-sm font-semibold text-[#ff5ce0] tracking-[0.4em] uppercase mb-3 sm:mb-4"
+              style={{ textShadow: bodyShadow }}
+            >
+              {intro.eyebrow}
+            </span>
+          )}
           <h3
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-wide mb-4 sm:mb-5"
             style={{ textShadow: headingShadow }}
           >
-            Team
+            {intro.heading}
           </h3>
           <p
             className="text-base sm:text-lg md:text-xl font-light text-white/85 tracking-wide max-w-2xl"
             style={{ textShadow: bodyShadow }}
           >
-            Drei Gründer, eine Vision — wir bringen eure Website von der ersten
-            Idee bis zum Live-Gang.
+            {intro.subheading}
           </p>
         </motion.div>
 

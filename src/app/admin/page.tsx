@@ -13,6 +13,7 @@ import {
   Cookie,
   FileText,
   Footprints,
+  Type,
 } from "lucide-react";
 
 const headingShadow =
@@ -25,6 +26,13 @@ const sections = [
     label: "Hero",
     description: "Tagline, animierte Wörter und die beiden Hero-Buttons.",
     icon: Star,
+  },
+  {
+    href: "/admin/sektionen",
+    label: "Sektions-Texte",
+    description:
+      "Überschriften und Untertitel über jeder Sektion (Team, Portfolio, Pricing …).",
+    icon: Type,
   },
   {
     href: "/admin/team",

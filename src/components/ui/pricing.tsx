@@ -4,6 +4,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Check, Zap, Server } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { useSectionIntro } from "@/lib/supabase/settings";
+
+const PRICING_INTRO_FALLBACK = {
+  eyebrow: "Flexibel & transparent",
+  heading: "Das passende Paket für dich",
+  subheading:
+    "Alle Preise sind Startpreise (Einmalzahlung) — der finale Preis richtet sich nach euren konkreten Anforderungen.",
+};
 
 const cn = (...classes: Array<string | false | null | undefined>) =>
   classes.filter(Boolean).join(" ");
@@ -49,6 +57,7 @@ export default function Pricing() {
   const cardsRef = useRef<HTMLDivElement>(null);
   const headerInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const cardsInView = useInView(cardsRef, { once: true, amount: 0.15 });
+  const intro = useSectionIntro("pricing", PRICING_INTRO_FALLBACK);
 
   const [plans, setPlans] = useState<Plan[] | null>(null);
 
@@ -82,22 +91,24 @@ export default function Pricing() {
       <div className="relative mx-auto max-w-7xl px-6 sm:px-8 md:px-12">
         {/* Header */}
         <div className="flex flex-col items-center text-center mb-10 sm:mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={
-              headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-            }
-            transition={{ duration: 0.6, ease }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#ff5ce0]/10 border border-[#ff5ce0]/30 mb-5 sm:mb-6"
-          >
-            <Zap className="h-4 w-4 text-[#ff5ce0]" />
-            <span
-              className="text-sm font-medium text-white/85 tracking-wide"
-              style={{ textShadow: bodyShadow }}
+          {intro.eyebrow && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={
+                headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+              }
+              transition={{ duration: 0.6, ease }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#ff5ce0]/10 border border-[#ff5ce0]/30 mb-5 sm:mb-6"
             >
-              Flexibel & transparent
-            </span>
-          </motion.div>
+              <Zap className="h-4 w-4 text-[#ff5ce0]" />
+              <span
+                className="text-sm font-medium text-white/85 tracking-wide"
+                style={{ textShadow: bodyShadow }}
+              >
+                {intro.eyebrow}
+              </span>
+            </motion.div>
+          )}
 
           <motion.h3
             initial={{ opacity: 0, y: 30 }}
@@ -108,7 +119,7 @@ export default function Pricing() {
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-wide mb-3 sm:mb-4"
             style={{ textShadow: headingShadow }}
           >
-            Das passende Paket für dich
+            {intro.heading}
           </motion.h3>
 
           <motion.p
@@ -120,8 +131,7 @@ export default function Pricing() {
             className="text-base sm:text-lg md:text-xl font-light text-white/85 tracking-wide max-w-2xl"
             style={{ textShadow: bodyShadow }}
           >
-            Alle Preise sind Startpreise (Einmalzahlung) — der finale Preis
-            richtet sich nach euren konkreten Anforderungen.
+            {intro.subheading}
           </motion.p>
 
           {/* Brutto / Netto Toggle */}

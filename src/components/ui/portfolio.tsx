@@ -9,6 +9,13 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { useSectionIntro } from "@/lib/supabase/settings";
+
+const PORTFOLIO_INTRO_FALLBACK = {
+  eyebrow: "",
+  heading: "Portfolio",
+  subheading: "Eine Auswahl unserer aktuellen Projekte",
+};
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const headingShadow =
@@ -111,6 +118,7 @@ function ProjectArt({ card }: { card: ProjectCard }) {
 export default function Portfolio() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
+  const intro = useSectionIntro("portfolio", PORTFOLIO_INTRO_FALLBACK);
 
   const [cards, setCards] = useState<ProjectCard[] | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -181,17 +189,25 @@ export default function Portfolio() {
           transition={{ duration: 0.7, ease }}
           className="mb-8 sm:mb-10"
         >
+          {intro.eyebrow && (
+            <span
+              className="block text-xs sm:text-sm font-semibold text-[#ff5ce0] tracking-[0.4em] uppercase mb-3"
+              style={{ textShadow: bodyShadow }}
+            >
+              {intro.eyebrow}
+            </span>
+          )}
           <h3
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-wide mb-2 sm:mb-3"
             style={{ textShadow: headingShadow }}
           >
-            Portfolio
+            {intro.heading}
           </h3>
           <p
             className="text-base sm:text-lg md:text-xl font-light text-white/85 tracking-wide"
             style={{ textShadow: bodyShadow }}
           >
-            Eine Auswahl unserer aktuellen Projekte
+            {intro.subheading}
           </p>
         </motion.div>
 

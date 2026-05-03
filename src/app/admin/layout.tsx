@@ -17,6 +17,7 @@ import {
   Cookie,
   FileText,
   Footprints,
+  Type,
 } from "lucide-react";
 import { ShaderBackground } from "@/components/ui/hero-shader";
 import { supabase } from "@/lib/supabase/client";
@@ -28,6 +29,7 @@ const bodyShadow = "0 1px 8px rgba(0,0,0,0.5)";
 const navItems = [
   { href: "/admin", label: "Übersicht", icon: LayoutDashboard, exact: true },
   { href: "/admin/hero", label: "Hero", icon: Star },
+  { href: "/admin/sektionen", label: "Sektions-Texte", icon: Type },
   { href: "/admin/team", label: "Team", icon: Users },
   { href: "/admin/portfolio", label: "Portfolio", icon: Briefcase },
   { href: "/admin/pricing", label: "Pricing", icon: Tag },
