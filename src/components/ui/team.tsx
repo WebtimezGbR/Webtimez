@@ -118,8 +118,6 @@ function rowToMember(row: TeamMemberRow): TeamMember {
       .from("Team")
       .getPublicUrl(row.image_path);
     imageSrc = data.publicUrl;
-    // eslint-disable-next-line no-console
-    console.log("[Team-Image]", row.name, "→", imageSrc);
   }
   return {
     name: row.name,

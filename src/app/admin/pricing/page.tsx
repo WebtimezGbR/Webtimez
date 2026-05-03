@@ -10,7 +10,6 @@ import {
   AdminRowActions,
   AdminToast,
   inputClass,
-  textareaClass,
 } from "@/components/admin/AdminUI";
 
 interface Plan {
@@ -116,10 +115,6 @@ export default function PricingAdminPage() {
     loadList();
   }, []);
 
-  function setField<K extends keyof Plan>(id: number, key: K, value: Plan[K]) {
-    setDrafts((prev) => ({ ...prev, [id]: { ...prev[id], [key]: value } }));
-  }
-
   async function saveRow(id: number) {
     const d = drafts[id];
     if (!d) return;
@@ -205,8 +200,7 @@ export default function PricingAdminPage() {
 
   function renderForm(
     d: Draft | Plan,
-    onChange: (next: Draft | Plan) => void,
-    isExisting: boolean
+    onChange: (next: Draft | Plan) => void
   ) {
     return (
       <>
@@ -298,7 +292,7 @@ export default function PricingAdminPage() {
           <p className="text-sm font-semibold text-[#ff5ce0] tracking-wider uppercase mb-4">
             Neues Paket
           </p>
-          {renderForm(newDraft, (next) => setNewDraft(next as Draft), false)}
+          {renderForm(newDraft, (next) => setNewDraft(next as Draft))}
           <AdminRowActions
             onSave={saveNew}
             onCancel={() => setNewDraft(null)}
@@ -323,14 +317,11 @@ export default function PricingAdminPage() {
                 Position {p.position} · {p.is_featured ? "Beliebteste" : ""}
               </p>
               {drafts[p.id] &&
-                renderForm(
-                  drafts[p.id],
-                  (next) =>
-                    setDrafts((prev) => ({
-                      ...prev,
-                      [p.id]: next as Plan,
-                    })),
-                  true
+                renderForm(drafts[p.id], (next) =>
+                  setDrafts((prev) => ({
+                    ...prev,
+                    [p.id]: next as Plan,
+                  }))
                 )}
               <AdminRowActions
                 onSave={() => saveRow(p.id)}

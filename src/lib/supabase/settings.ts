@@ -89,7 +89,6 @@ export async function fetchSetting<T>(key: SettingKey): Promise<T | null> {
     .single();
   if (error || !data) {
     if (error) {
-      // eslint-disable-next-line no-console
       console.warn(`[settings] ${key} konnte nicht geladen werden:`, error.message);
     }
     return null;

@@ -10,7 +10,6 @@ import {
   AdminRowActions,
   AdminToast,
   inputClass,
-  textareaClass,
 } from "@/components/admin/AdminUI";
 
 function getTeamPublicUrl(path: string | null): string | null {
