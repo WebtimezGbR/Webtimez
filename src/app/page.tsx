@@ -90,7 +90,7 @@ export default function Home() {
         >
           <div className="text-left">
             <motion.h1
-              className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[1.05] text-white mb-3 sm:mb-4 font-extrabold"
+              className="text-5xl sm:text-7xl md:text-8xl xl:text-9xl leading-[1.05] text-white mb-3 sm:mb-4 font-extrabold"
               style={{ letterSpacing: "0.02em", textShadow: headingShadow }}
               initial={{ opacity: 0, y: 60 }}
               animate={

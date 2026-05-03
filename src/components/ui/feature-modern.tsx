@@ -425,7 +425,7 @@ export default function Feature() {
             </span>
           )}
           <h3
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-wide"
+            className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-white tracking-wide"
             style={{ textShadow: headingShadow }}
           >
             <Balancer>{intro.heading}</Balancer>
@@ -452,7 +452,7 @@ export default function Feature() {
                 ? Array.from({ length: 3 }).map((_, i) => (
                     <div
                       key={i}
-                      className="min-w-0 shrink-0 grow-0 basis-full pl-4 sm:pl-5 md:pl-6 md:basis-1/2 lg:basis-1/3"
+                      className="min-w-0 shrink-0 grow-0 basis-full pl-4 sm:pl-5 md:pl-6 md:basis-1/2 xl:basis-1/3"
                     >
                       <div className="h-[440px] sm:h-[460px] rounded-3xl border border-white/10 bg-black/30 backdrop-blur-md p-7 sm:p-8 flex flex-col justify-between">
                         <div className="flex items-start justify-between">
@@ -472,7 +472,7 @@ export default function Feature() {
                       key={service.number}
                       role="group"
                       aria-roledescription="slide"
-                      className="min-w-0 shrink-0 grow-0 basis-full pl-4 sm:pl-5 md:pl-6 md:basis-1/2 lg:basis-1/3"
+                      className="min-w-0 shrink-0 grow-0 basis-full pl-4 sm:pl-5 md:pl-6 md:basis-1/2 xl:basis-1/3"
                     >
                       <ServiceCard
                         service={service}

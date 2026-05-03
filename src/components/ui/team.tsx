@@ -177,7 +177,7 @@ export default function Team() {
             </span>
           )}
           <h3
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-wide mb-4 sm:mb-5"
+            className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-white tracking-wide mb-4 sm:mb-5"
             style={{ textShadow: headingShadow }}
           >
             {intro.heading}

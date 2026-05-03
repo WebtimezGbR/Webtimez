@@ -116,7 +116,7 @@ export default function Pricing() {
               headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
             }
             transition={{ duration: 0.7, ease, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-wide mb-3 sm:mb-4"
+            className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-white tracking-wide mb-3 sm:mb-4"
             style={{ textShadow: headingShadow }}
           >
             {intro.heading}
@@ -185,7 +185,7 @@ export default function Pricing() {
         {/* Pricing Cards */}
         <div
           ref={cardsRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 md:gap-7 max-w-7xl w-full mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6 md:gap-7 max-w-7xl w-full mx-auto"
         >
           {plans === null
             ? Array.from({ length: 3 }).map((_, i) => (
