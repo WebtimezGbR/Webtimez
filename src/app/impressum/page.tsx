@@ -9,6 +9,7 @@ import {
   useSetting,
   type ImpressumSettings,
 } from "@/lib/supabase/settings";
+import { BreadcrumbJsonLd } from "@/components/seo/structured-data";
 
 const headingShadow =
   "0 2px 18px rgba(0,0,0,0.55), 0 1px 4px rgba(0,0,0,0.4)";
@@ -49,6 +50,13 @@ export default function ImpressumPage() {
           Zurück
         </Link>
       </header>
+
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Startseite", url: "https://webtimez.com" },
+          { name: "Impressum", url: "https://webtimez.com/impressum" },
+        ]}
+      />
 
       {/* Inhalt */}
       <main className="relative z-20 mx-auto max-w-3xl w-full px-6 sm:px-8 md:px-12 py-12 sm:py-16 md:py-20">

@@ -7,6 +7,7 @@ import Footer from "@/components/ui/footer";
 import CookieConsent, {
   setCookieConsent,
 } from "@/components/ui/cookie-consent";
+import { BreadcrumbJsonLd } from "@/components/seo/structured-data";
 
 const headingShadow =
   "0 2px 18px rgba(0,0,0,0.55), 0 1px 4px rgba(0,0,0,0.4)";
@@ -33,6 +34,13 @@ export default function DatenschutzPage() {
           Zurück
         </Link>
       </header>
+
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Startseite", url: "https://webtimez.com" },
+          { name: "Datenschutzerklärung", url: "https://webtimez.com/datenschutz" },
+        ]}
+      />
 
       {/* Inhalt */}
       <main className="relative z-20 mx-auto max-w-3xl w-full px-6 sm:px-8 md:px-12 py-12 sm:py-16 md:py-20">

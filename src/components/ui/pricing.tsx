@@ -110,7 +110,7 @@ export default function Pricing() {
             </motion.div>
           )}
 
-          <motion.h3
+          <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={
               headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
@@ -120,7 +120,7 @@ export default function Pricing() {
             style={{ textShadow: headingShadow }}
           >
             {intro.heading}
-          </motion.h3>
+          </motion.h2>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -231,12 +231,12 @@ export default function Pricing() {
                 </div>
               )}
 
-              <h4
+              <h3
                 className="text-2xl sm:text-3xl font-bold text-white tracking-wide"
                 style={{ textShadow: headingShadow }}
               >
                 {plan.name}
-              </h4>
+              </h3>
               <p
                 className="text-sm sm:text-base text-white/70 mt-2"
                 style={{ textShadow: bodyShadow }}
@@ -303,12 +303,12 @@ export default function Pricing() {
             <Server className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <h5
+            <h3
               className="text-base sm:text-lg font-semibold text-white tracking-wide mb-1"
               style={{ textShadow: headingShadow }}
             >
               Hosting für alle Pakete
-            </h5>
+            </h3>
             <p
               className="text-sm sm:text-base text-white/80 tracking-wide leading-relaxed"
               style={{ textShadow: bodyShadow }}

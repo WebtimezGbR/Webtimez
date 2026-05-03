@@ -99,6 +99,12 @@ export default function RootLayout({
       lang="de"
       className="h-full antialiased overflow-x-hidden"
     >
+      <head>
+        <link rel="preconnect" href="https://yfvlqwbosusphgqlglgu.supabase.co" />
+        <link rel="dns-prefetch" href="https://yfvlqwbosusphgqlglgu.supabase.co" />
+        <link rel="preconnect" href="https://api.web3forms.com" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+      </head>
       <body
         className="min-h-full flex flex-col overflow-x-hidden text-white"
         style={{ fontFamily: "'Neue Haas Grotesk Display Pro', 'Neue Haas Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif" }}

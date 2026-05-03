@@ -195,12 +195,12 @@ export default function Home() {
               {prozessIntro.eyebrow}
             </span>
           )}
-          <h3
+          <h2
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-wide mb-2 sm:mb-3"
             style={{ textShadow: headingShadow }}
           >
             {prozessIntro.heading}
-          </h3>
+          </h2>
           <p
             className="text-base sm:text-lg md:text-xl font-light text-white/85 tracking-wide"
             style={{ textShadow: bodyShadow }}

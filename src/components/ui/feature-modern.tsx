@@ -315,12 +315,12 @@ function ServiceCard({ service, index, inView }: CardProps) {
       </div>
 
       {/* Title — feste Höhe, unten ausgerichtet → alle Überschriften enden auf gleicher Y-Linie */}
-      <h4
+      <h3
         className="relative z-10 text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-wide uppercase h-[4.5rem] sm:h-[5rem] flex items-end shrink-0"
         style={{ textShadow: headingShadow }}
       >
         {service.title}
-      </h4>
+      </h3>
 
       {/* Description — startet direkt unter der Title-Linie, gleicher Abstand bei allen Cards */}
       <p
@@ -424,18 +424,18 @@ export default function Feature() {
               {intro.eyebrow}
             </span>
           )}
-          <h3
+          <h2
             className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-white tracking-wide"
             style={{ textShadow: headingShadow }}
           >
             <Balancer>{intro.heading}</Balancer>
-          </h3>
-          <h4
+          </h2>
+          <p
             className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light text-white/85 tracking-wide"
             style={{ textShadow: bodyShadow }}
           >
             <Balancer>{intro.subheading}</Balancer>
-          </h4>
+          </p>
         </motion.div>
 
         {/* Carousel */}

@@ -80,12 +80,12 @@ export default function Contact() {
             </span>
           </span>
 
-          <h3
+          <h2
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-wide mb-3 sm:mb-4"
             style={{ textShadow: headingShadow }}
           >
             {settings.heading}
-          </h3>
+          </h2>
 
           <p
             className="text-base sm:text-lg md:text-xl font-light text-white/85 tracking-wide max-w-2xl"

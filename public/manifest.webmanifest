@@ -1,0 +1,33 @@
+{
+  "name": "Webtimez – Webdesign & Webentwicklung aus Köln",
+  "short_name": "Webtimez",
+  "description": "Webagentur aus Köln. Professionelle Websites für kleine und regionale Unternehmen.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0612",
+  "theme_color": "#0a0612",
+  "lang": "de",
+  "dir": "ltr",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

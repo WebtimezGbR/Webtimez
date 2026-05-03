@@ -197,12 +197,12 @@ export default function Portfolio() {
               {intro.eyebrow}
             </span>
           )}
-          <h3
+          <h2
             className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-white tracking-wide mb-2 sm:mb-3"
             style={{ textShadow: headingShadow }}
           >
             {intro.heading}
-          </h3>
+          </h2>
           <p
             className="text-base sm:text-lg md:text-xl font-light text-white/85 tracking-wide"
             style={{ textShadow: bodyShadow }}
@@ -354,12 +354,12 @@ export default function Portfolio() {
                 <span className="inline-block text-[10px] sm:text-xs uppercase tracking-widest text-white/80 px-3 py-1 rounded-full bg-white/10 border border-white/15 mb-3">
                   {frontProject.category}
                 </span>
-                <h4
+                <h3
                   className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-wide mb-1"
                   style={{ textShadow: headingShadow }}
                 >
                   {frontProject.title}
-                </h4>
+                </h3>
                 <p
                   className="text-sm sm:text-base text-white/75 leading-snug max-w-md mx-auto"
                   style={{ textShadow: bodyShadow }}

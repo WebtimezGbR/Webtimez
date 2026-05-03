@@ -174,12 +174,12 @@ export default function Team() {
               {intro.eyebrow}
             </span>
           )}
-          <h3
+          <h2
             className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-white tracking-wide mb-4 sm:mb-5"
             style={{ textShadow: headingShadow }}
           >
             {intro.heading}
-          </h3>
+          </h2>
           <p
             className="text-base sm:text-lg md:text-xl font-light text-white/85 tracking-wide max-w-2xl"
             style={{ textShadow: bodyShadow }}
@@ -230,12 +230,12 @@ export default function Team() {
               </div>
 
               {/* Name + Rolle */}
-              <h4
+              <h3
                 className="relative z-10 mt-4 sm:mt-5 text-lg sm:text-xl md:text-2xl font-bold text-white tracking-wide"
                 style={{ textShadow: headingShadow }}
               >
                 {member.name}
-              </h4>
+              </h3>
               <p
                 className="relative z-10 mt-1 text-sm sm:text-base text-white/70 tracking-wide"
                 style={{ textShadow: bodyShadow }}
