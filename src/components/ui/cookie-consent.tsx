@@ -54,8 +54,18 @@ export default function CookieConsent() {
   const settingsFromDb = useSetting<CookieSettings>("cookies");
   const settings = settingsFromDb ?? FALLBACK_COOKIES;
 
+  // Banner darf den LCP nicht blockieren: erst nach First Paint mounten.
+  // requestIdleCallback wartet bis der Browser idle ist, Fallback auf 800ms.
   useEffect(() => {
-    setMounted(true);
+    type Idle = (cb: () => void, opts?: { timeout: number }) => number;
+    const ric = (window as unknown as { requestIdleCallback?: Idle })
+      .requestIdleCallback;
+    if (typeof ric === "function") {
+      ric(() => setMounted(true), { timeout: 1500 });
+    } else {
+      const t = setTimeout(() => setMounted(true), 800);
+      return () => clearTimeout(t);
+    }
   }, []);
 
   const isOpen = mounted && consent === null;

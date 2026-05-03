@@ -46,7 +46,6 @@ export default function Home() {
 
   const heroRef = useRef<HTMLElement>(null);
   const processRef = useRef<HTMLElement>(null);
-  const heroInView = useInView(heroRef, { once: false, amount: 0.2 });
   const processInView = useInView(processRef, { once: false, amount: 0.2 });
 
   // Hero: scroll-gekoppeltes Verblassen + 3D-Kipp beim Runterscrollen
@@ -92,10 +91,8 @@ export default function Home() {
             <motion.h1
               className="text-5xl sm:text-7xl md:text-8xl xl:text-9xl leading-[1.05] text-white mb-3 sm:mb-4 font-extrabold"
               style={{ letterSpacing: "0.02em", textShadow: headingShadow }}
-              initial={{ opacity: 0, y: 60 }}
-              animate={
-                heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }
-              }
+              initial={{ y: 60 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.7, ease, delay: 0.1 }}
             >
               WEBTIMEZ
@@ -103,10 +100,8 @@ export default function Home() {
 
             <motion.span
               className="relative flex overflow-hidden text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-wide mb-6 sm:mb-8 h-11 sm:h-14 md:h-16"
-              initial={{ opacity: 0, y: 50 }}
-              animate={
-                heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
-              }
+              initial={{ y: 50 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.7, ease, delay: 0.25 }}
             >
               {aiTitles.map((title, index) => (
@@ -130,10 +125,8 @@ export default function Home() {
             <motion.p
               className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-4xl font-light text-white/85 mb-6 sm:mb-8 leading-snug max-w-4xl tracking-wide"
               style={{ textShadow: bodyShadow }}
-              initial={{ opacity: 0, y: 40 }}
-              animate={
-                heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }
-              }
+              initial={{ y: 40 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.7, ease, delay: 0.4 }}
             >
               {hero.tagline}
@@ -141,10 +134,8 @@ export default function Home() {
 
             <motion.div
               className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4"
-              initial={{ opacity: 0, y: 30 }}
-              animate={
-                heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
-              }
+              initial={{ y: 30 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.7, ease, delay: 0.55 }}
             >
               <a
