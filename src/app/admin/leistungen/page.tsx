@@ -18,6 +18,7 @@ const SERVICE_ICONS = [
   "BarChart3",
   "Server",
   "ShieldCheck",
+  "TrendingUp",
 ];
 
 const GRAPHIC_TYPES = [

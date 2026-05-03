@@ -8,6 +8,7 @@ import {
   BarChart3,
   Server,
   ShieldCheck,
+  TrendingUp,
   ChevronLeft,
   ChevronRight,
   HelpCircle,
@@ -23,6 +24,7 @@ const ICONS: Record<string, React.ElementType> = {
   BarChart3,
   Server,
   ShieldCheck,
+  TrendingUp,
 };
 
 function resolveIcon(name: string | null | undefined): React.ElementType {
